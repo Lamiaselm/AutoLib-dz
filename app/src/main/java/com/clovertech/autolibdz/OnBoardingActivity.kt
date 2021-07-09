@@ -1,6 +1,8 @@
 package com.clovertech.autolibdz
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -20,6 +22,17 @@ class OnBoardingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_on_boarding)
+        val preferences: SharedPreferences = getSharedPreferences("LoggedIn", Context.MODE_PRIVATE)
+        val loggedIn =  preferences.getBoolean("LoggedIn",false)
+
+        var toMain = Intent(this@OnBoardingActivity, MainActivity::class.java)
+        toMain.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        if(loggedIn) {
+            println("loggedin")
+
+            toMain = Intent(this@OnBoardingActivity, HomeActivity::class.java)
+        }
+        toMain.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
 
         sliderAdapter = SliderAdapter(this)
         view_pager.adapter = sliderAdapter

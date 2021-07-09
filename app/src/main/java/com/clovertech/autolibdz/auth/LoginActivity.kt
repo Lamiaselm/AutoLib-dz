@@ -11,7 +11,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.clovertech.autolibdz.FindYourCarActivity
 import com.clovertech.autolibdz.HomeActivity
+import com.clovertech.autolibdz.MainActivity
 import com.clovertech.autolibdz.R
 import com.clovertech.autolibdz.ViewModel.MainViewModel
 import com.clovertech.autolibdz.ViewModel.MainViewModelFactory
@@ -29,6 +31,18 @@ class LoginActivity : AppCompatActivity() , View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        val preferences: SharedPreferences = getSharedPreferences("LoggedIn", Context.MODE_PRIVATE)
+        val loggedIn =  preferences.getBoolean("LoggedIn",false)
+
+        var toMain = Intent(this@LoginActivity, MainActivity::class.java)
+        toMain.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        if(loggedIn) {
+            println("loggedin")
+
+            toMain = Intent(this@LoginActivity, HomeActivity::class.java)
+        }
+        toMain.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+
 
         login_btn.setOnClickListener(this)
         forgotPassword_txt_view.setOnClickListener(this)
@@ -73,6 +87,8 @@ class LoginActivity : AppCompatActivity() , View.OnClickListener {
                     val idTenant=response.body()?.id
                     idTenantHelper=idTenant!!
                     startActivity(Intent(this, HomeActivity::class.java))
+                    val preferences: SharedPreferences = getSharedPreferences("LoggedIn", Context.MODE_PRIVATE)
+                    preferences.edit().putBoolean("LoggedIn", true).apply()
                     Log.e("Push", response.body()?.id.toString())
                     Log.e("Push", response.body().toString())
                     Log.e("Push", response.code().toString())
