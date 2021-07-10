@@ -21,10 +21,7 @@ class SplashActivity : AppCompatActivity() {
                     if (firstRun()){
                         val toMain = Intent(this@SplashActivity, OnBoardingActivity::class.java)
                         toMain.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                        val prefs = getSharedPreferences("prefs", Context.MODE_PRIVATE)
-                        val editor = prefs.edit()
-                        editor.putBoolean("FirstRun", false)
-                        editor.apply()
+
                         startActivity(toMain)
                         finish()
                     }else {

@@ -1,6 +1,11 @@
-package com.clovertech.autolibdz.ui.subscription
+package com.clovertech. autolibdz.ui.subscription
 
+import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +13,7 @@ import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import com.clovertech.autolibdz.DataClasses.SubStateResponse
 import com.clovertech.autolibdz.DataClasses.SubscriptionResponse
 import com.clovertech.autolibdz.R
 import com.clovertech.autolibdz.ui.promo.idTenantHelper
@@ -35,11 +41,12 @@ class SubscriptionFragment  : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val idTenant= arguments?.getInt("idTenant")
         val amount= arguments?.getInt("amount")
+        val preferences: SharedPreferences = requireActivity().getSharedPreferences("MY_APP", Context.MODE_PRIVATE)
+        val idUser=preferences.getInt("IDUSER",0)
+        Log.d("idUSER",idUser.toString())
 
-
-        val call = idTenantHelper?.let { RetrofitInstance.subApi.getSubByTenant(it) }
+        val call = idUser?.let { RetrofitInstance.subApi.getSubByTenant(it) }
         if (call != null) {
             call.enqueue(object:Callback<SubscriptionResponse>{
                 override fun onFailure(call: Call<SubscriptionResponse>, t: Throwable) {
@@ -67,12 +74,59 @@ class SubscriptionFragment  : Fragment() {
                         }
                         solde.setText(response.body()?.solde.toString()+" DA")
                         val idSub= response.body()?.idSub
+                        val expiry= response.body()?.expirationDate
 
                         sub_card.setOnClickListener {
+
+                             val sub = RetrofitInstance.subApi.getSubStateByTenant(idUser)
+                                sub.enqueue(object:Callback<SubStateResponse>{
+                                    override fun onFailure(
+                                        call: Call<SubStateResponse>,
+                                        t: Throwable
+                                    ) {
+                                        Log.d("push date ex",t.toString())
+                                    }
+
+                                    @SuppressLint("ResourceType")
+                                    override fun onResponse(
+                                        call: Call<SubStateResponse>,
+                                        response: Response<SubStateResponse>
+                                    ) {
+                                        if(response.isSuccessful)
+                                        {
+                                            Log.d("push date",response.raw().toString())
+                                            val msg = response.body()?.msg
+                                            if(msg=="expired")
+                                            {
+                                                Log.d("carte expiré",response.raw().toString())
+                                                val builder = AlertDialog.Builder(context)
+
+                                                builder.setTitle("Attention!")
+                                                builder.setMessage("Votre carte d'abonnement est expirée !")
+                                                builder.setIconAttribute(R.drawable.ic_baseline_warning_24)
+
+                                                builder.setPositiveButton("Ok"){dialogInterface, which ->
+                                                }
+                                                builder.setNeutralButton("Cancel"){dialogInterface , which ->
+                                                }
+                                                val alertDialog: AlertDialog = builder.create()
+                                                alertDialog.setCancelable(false)
+                                                alertDialog.show()
+                                            }
+
+                                        }
+
+
+                                    }
+
+
+                                })
+
+
                             val confirmSubPayFragment = ConfirmSubPayFragment()
                             val args= bundleOf("amount" to amount,"idSub" to idSub)
                             confirmSubPayFragment.arguments=args
-                            fragmentManager?.let { it1 -> confirmSubPayFragment.show(it1, "confirm_pay_fragment") }
+                        fragmentManager?.let { it1 -> confirmSubPayFragment.show(it1, "confirm_pay_fragment") }
                         }
                     }
                 }
@@ -93,3 +147,7 @@ class SubscriptionFragment  : Fragment() {
 
 
 }
+
+
+
+

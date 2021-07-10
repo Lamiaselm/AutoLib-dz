@@ -1,5 +1,7 @@
 package com.clovertech.autolibdz.ui.tarification
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -46,6 +48,7 @@ class TarificationFragment : Fragment(){
     var days = 0
     var totalprice = 0
     var idrental=-1
+    var rentalType=""
     lateinit var type:String
 
     override fun onCreateView(
@@ -139,6 +142,8 @@ class TarificationFragment : Fragment(){
                             Toast.makeText(activity,"Vous pouvez pas Avoir une durée < 0",Toast.LENGTH_SHORT).show()
                         }}
                 }
+               rentalType=typepaiement.get(p2)
+
             }
 
         }
@@ -189,64 +194,106 @@ class TarificationFragment : Fragment(){
             }
             val t=LocalTime.now()
             val d= LocalDate.now()
+            val preferences: SharedPreferences = requireActivity().getSharedPreferences("MY_APP", Context.MODE_PRIVATE)
+            val idUser=preferences.getInt("IDUSER",0)
+            Log.d("idUSER",idUser.toString())
             Toast.makeText(context,"id $id",Toast.LENGTH_LONG).show()
-            val rental=
-                    id?.let {
-                        Rental(0,
-                            idTenantHelper, it,date_time,LocalTime.now().toString(),d.plusDays(2).toString()+" "+t.toString(),
-                                t.toString(),d.plusDays(2).toString()+" "+t.toString(),t.toString(),"jour",
-                                1,1,"active")
-                    }
+            if (id!=null) {
+                val rental = Rental(
+                    0,
+                    idUser,
+                    id,
+                    date_time,
+                    LocalTime.now().toString(),
+                    d.plusDays(2).toString() + " " + t.toString(),
+                    t.toString(),
+                    d.plusDays(2).toString() + " " + t.toString(),
+                    t.toString(),
+                    rentalType,
+                    1,
+                    2,
+                    "pending"
+                )
 
 
-            rental?.let { rentalViewModel.addRental(it) }
-            rentalViewModel.rentalResponse
-                    .observe(viewLifecycleOwner, Observer {
-                        response ->
-
-                        if (response.isSuccessful){
-                            idrental= response.body()!!.idRental
 
 
-                            Log.e("Push",response.body().toString())
-                            Log.e("Push",response.code().toString())
+
+                Log.d("rental", rentalType)
+                rentalViewModel.addRental(rental)
+                rentalViewModel.rentalResponse
+                    .observe(viewLifecycleOwner, Observer { response ->
+
+                        if (response.isSuccessful) {
+                            idrental = response.body()!!.idRental
+
+
+                            Log.e("Push", response.body().toString())
+                            Log.e("Push", response.code().toString())
                             //code promo
-                            if (listner)
-                            {   Toast.makeText(requireContext(),"to card :$pricetotarif",Toast.LENGTH_SHORT).show()
+                            if (listner) {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "to card :$pricetotarif",
+                                    Toast.LENGTH_SHORT
+                                ).show()
 
-                                val bundle = bundleOf("amount" to pricetotarif,"idrental" to idrental)
-                                Toast.makeText(requireContext(),"to card :$pricetotarif",Toast.LENGTH_SHORT).show()
-                                view?.findNavController()?.navigate(R.id.action_nav_slideshow_to_nav_card,bundle)
+                                val bundle =
+                                    bundleOf("amount" to pricetotarif, "idrental" to idrental)
+                                Toast.makeText(
+                                    requireContext(),
+                                    "to card :$pricetotarif",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                view?.findNavController()
+                                    ?.navigate(R.id.action_nav_slideshow_to_nav_card, bundle)
 
 
                             }
                             //card d'abonnement
-                           // sub=true
+                            // sub=true
                             else
-                            if (type=="Carte d'abonnement")
-                            {
-                                val bundle = bundleOf("idTenant" to idTenantHelper,"amount" to totalprice)
-                                Toast.makeText(requireContext(),"to card :$idTenantHelper",Toast.LENGTH_SHORT).show()
-                                Log.e("id", idTenantHelper.toString())
-                                view?.findNavController()?.navigate(R.id.action_nav_slideshow_to_nav_sub,bundle)
+                                if (type == "Carte d'abonnement") {
+                                    val bundle =
+                                        bundleOf("idTenant" to idUser, "amount" to totalprice)
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "to card :$idUser",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    Log.e("id", idUser.toString())
+                                    view?.findNavController()
+                                        ?.navigate(R.id.action_nav_slideshow_to_nav_sub, bundle)
 
 
-                            }
+                                } else {
+                                    val bundle =
+                                        bundleOf("amount" to totalprice, "idrental" to idrental)
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "to card :$totalprice",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    view?.findNavController()
+                                        ?.navigate(R.id.action_nav_slideshow_to_nav_card, bundle)
+                                }
 
-                            else{
-                                val bundle = bundleOf("amount" to totalprice,"idrental" to idrental)
-                                Toast.makeText(requireContext(),"to card :$totalprice",Toast.LENGTH_SHORT).show()
-                                view?.findNavController()?.navigate(R.id.action_nav_slideshow_to_nav_card,bundle)
-                            }
-
-                            Toast.makeText(requireContext(),"rental added successfully",Toast.LENGTH_SHORT).show()
-                        }else{
-                            Log.e("Push",response.body().toString())
-                            Log.e("Push",response.code().toString())
-                            Toast.makeText(requireContext(),"erreur rental not added ",Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                requireContext(),
+                                "rental added successfully",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            Log.e("Push", response.raw().toString())
+                            Log.e("Push", response.code().toString())
+                            Toast.makeText(
+                                requireContext(),
+                                "erreur rental not added ",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     })
-
+            }
 
         }
 

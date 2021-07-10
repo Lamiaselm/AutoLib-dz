@@ -19,16 +19,16 @@ class SliderAdapter(var context: Context) : PagerAdapter() {
             "AutoLib Dz"
     )
     var slider_second_headers = arrayOf(
-            "Lorem ipsum dolor",
-            "Second title",
-            "Lorem ipsum dolor",
-            "Deuxième titre"
+            "Choisissez une borne",
+            "Choisisez un véhicule",
+            "Accedez au paiement",
+            "Débloquez votre véhicule !"
     )
     var slider_descriptions = arrayOf(
-            "Lorem ipsum dolor sit am, consecteta",
-            "Description of 2nd page",
-            "Lorem ipsum dolor sit am, consecteta",
-            "Description du 2éme page"
+            "Localisez-vous à la borne la plus proche de vous",
+            "Une liste des véhicules disponibles est affichée pour vous avec détail",
+            "Paiement avec carte de crédit ou carte d'abonnement  ",
+            "Associez-vous avec votre véhicule pour l'ouvrir"
     )
 
     override fun getCount(): Int {

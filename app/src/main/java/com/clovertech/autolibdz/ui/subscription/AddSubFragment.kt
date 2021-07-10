@@ -1,5 +1,7 @@
 package com.clovertech.autolibdz.ui.subscription
 import ViewModel.ViewModelCard
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -57,7 +59,9 @@ class AddSubFragment :  BottomSheetDialogFragment() {
             }
         }
         create_card.setOnClickListener {
-
+            val preferences: SharedPreferences = requireActivity().getSharedPreferences("MY_APP", Context.MODE_PRIVATE)
+            val idUser=preferences.getInt("IDUSER",0)
+            Log.d("idUSER",idUser.toString())
             val repository = PaymentRepository()
             val viewModelFactory = MainViewModelFactoryCard(repository)
             viewModel = ViewModelProvider(this,viewModelFactory)
@@ -66,7 +70,7 @@ class AddSubFragment :  BottomSheetDialogFragment() {
             var idSpinner=spinner.selectedItemPosition
             Toast.makeText(context,"you entered $idSpinner",Toast.LENGTH_SHORT).show()
 
-            val subscriptionRequest= SubscriptionRequest(idTenantHelper,idSpinner)
+            val subscriptionRequest= SubscriptionRequest(idUser,idSpinner)
             viewModel.addSub(subscriptionRequest)
             viewModel.SubResponse.observe(viewLifecycleOwner, Observer { response ->
                 if (response.isSuccessful) {

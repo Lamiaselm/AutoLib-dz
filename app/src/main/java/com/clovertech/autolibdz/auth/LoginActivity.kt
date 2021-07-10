@@ -83,9 +83,11 @@ class LoginActivity : AppCompatActivity() , View.OnClickListener {
             viewModel.authenticationResponse.observe(this, Observer { response ->
                 if (response.isSuccessful) {
                     Toast.makeText(this, "SignIn Successfully", Toast.LENGTH_SHORT).show()
-                    saveUserToken(response.body()?.token.toString())
-                    val idTenant=response.body()?.id
-                    idTenantHelper=idTenant!!
+                    val idUser=response.body()?.id
+                    val token =response.body()?.token.toString()
+                    if (idUser != null) {
+                        saveUserToken(token,idUser)
+                    }
                     startActivity(Intent(this, HomeActivity::class.java))
                     val preferences: SharedPreferences = getSharedPreferences("LoggedIn", Context.MODE_PRIVATE)
                     preferences.edit().putBoolean("LoggedIn", true).apply()
@@ -104,9 +106,11 @@ class LoginActivity : AppCompatActivity() , View.OnClickListener {
         }
     }
 
-    private fun saveUserToken(token: String){
+    private fun saveUserToken(token: String,idUser:Int){
         val preferences: SharedPreferences = getSharedPreferences("MY_APP", Context.MODE_PRIVATE)
         preferences.edit().putString("TOKEN", token).apply()
+        preferences.edit().putInt("IDUSER", idUser).apply()
+
 
         /// Retrive Saved TOKEN
         //val retrivedToken = preferences.getString("TOKEN", null) //second parameter default value.
