@@ -25,10 +25,10 @@ class SliderAdapter(var context: Context) : PagerAdapter() {
             "Débloquez votre véhicule !"
     )
     var slider_descriptions = arrayOf(
-            "Localisez-vous à la borne la plus proche de vous",
-            "Une liste des véhicules disponibles est affichée pour vous avec détail",
-            "Paiement avec carte de crédit ou carte d'abonnement  ",
-            "Associez-vous avec votre véhicule pour l'ouvrir"
+            "Localisez-vous à la borne la plus proche",
+            "Parmis la liste des véhicules disponibles",
+            "Avec carte de crédit ou carte d'abonnement",
+            "Associez-vous avec votre véhicule"
     )
 
     override fun getCount(): Int {

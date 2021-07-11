@@ -1,6 +1,7 @@
 package com.clovertech.autolibdz.Adapters
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -15,9 +16,7 @@ import com.clovertech.autolibdz.DataClasses.Promo
 import com.clovertech.autolibdz.DataClasses.ReduPriceResponse
 import com.clovertech.autolibdz.R
 import com.clovertech.autolibdz.ui.card.ConfirmPayFragment
-import com.clovertech.autolibdz.ui.promo.PromoFragment
-import com.clovertech.autolibdz.ui.promo.idCodePromo
-import com.clovertech.autolibdz.ui.promo.pricetotarif
+import com.clovertech.autolibdz.ui.promo.*
 
 import com.clovertech.autolibdz.utils.RetrofitInstance
 import retrofit2.Call
@@ -40,6 +39,9 @@ class PromoAdapter(val context: Context, var data:List<Promo>,var priceReduHelpe
         val promoFragment = PromoFragment()
         val red = ((data[position].reductionRate)*100).roundToInt()
         val point = data[position].pricePoints.roundToInt()
+        val preferences: SharedPreferences = context.getSharedPreferences("MY_APP", Context.MODE_PRIVATE)
+        val idUser=preferences.getInt("IDUSER",0)
+        Log.d("idUSER",idUser.toString())
         holder.reductionRate.text=red.toString()+"%"
         holder.pricePoints.text=point.toString()+"points"
 
@@ -48,7 +50,7 @@ class PromoAdapter(val context: Context, var data:List<Promo>,var priceReduHelpe
             idCodePromo=id
           //  Toast.makeText(context,"total for reduction : $totalprice",Toast.LENGTH_SHORT).show()
 
-            val call =RetrofitInstance.retrofitReduPrice.getReduPriceByidPromo(totalprice,id)
+            val call =RetrofitInstance.retrofitReduPrice.getReduPriceByidPromo(totalprice,id,idUser)
             call.enqueue(object:Callback<ReduPriceResponse> {
                 override fun onFailure(call: Call<ReduPriceResponse>, t: Throwable) {
                     Log.d("fail", t.toString())
@@ -62,7 +64,13 @@ class PromoAdapter(val context: Context, var data:List<Promo>,var priceReduHelpe
                 ) {
                      if(response.isSuccessful)
                      {
+
                          var price = response.body()?.price
+                         var currentPoints=response.body()?.currentPoints
+                         if (currentPoints != null) {
+                             mesPointsHelper=currentPoints
+                             pointListner=true
+                         }
                          priceReduHelper.setText(price.toString()+"  DA")
                          if (price != null) {
                              pricetotarif=price

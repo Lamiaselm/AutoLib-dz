@@ -47,7 +47,7 @@ class ListCarsFragment : Fragment() {
 
 
         CoroutineScope(Dispatchers.Main).launch{
-            val response=repository.getCarsByStat("available",2)
+            val response=repository.getCarsByStat("available",0)
             if(!response.isEmpty()){
                 Toast.makeText(
                     activity,

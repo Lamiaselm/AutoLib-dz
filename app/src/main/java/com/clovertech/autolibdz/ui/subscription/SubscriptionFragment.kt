@@ -16,7 +16,6 @@ import androidx.fragment.app.FragmentActivity
 import com.clovertech.autolibdz.DataClasses.SubStateResponse
 import com.clovertech.autolibdz.DataClasses.SubscriptionResponse
 import com.clovertech.autolibdz.R
-import com.clovertech.autolibdz.ui.promo.idTenantHelper
 import com.clovertech.autolibdz.utils.RetrofitInstance
 import kotlinx.android.synthetic.main.fragment_subscription.*
 import retrofit2.Call

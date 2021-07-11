@@ -18,7 +18,6 @@ import com.clovertech.autolibdz.R
 import com.clovertech.autolibdz.ViewModel.MainViewModel
 import com.clovertech.autolibdz.ViewModel.MainViewModelFactory
 import com.clovertech.autolibdz.password.ResetPasswordActivity
-import com.clovertech.autolibdz.ui.promo.idTenantHelper
 import kotlinx.android.synthetic.main.activity_login.*
 import model.Authentication
 import repository.Repository

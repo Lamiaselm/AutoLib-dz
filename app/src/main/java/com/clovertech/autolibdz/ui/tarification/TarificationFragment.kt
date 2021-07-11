@@ -28,7 +28,6 @@ import com.clovertech.autolibdz.ViewModel.RentalViewModelFactory
 import com.clovertech.autolibdz.repository.RentalRepository
 import com.clovertech.autolibdz.ui.card.ConfirmPayFragment
 import com.clovertech.autolibdz.ui.promo.PromoFragment
-import com.clovertech.autolibdz.ui.promo.idTenantHelper
 import com.clovertech.autolibdz.ui.promo.listner
 import com.clovertech.autolibdz.ui.promo.pricetotarif
 import kotlinx.android.synthetic.main.fragment_promo.*

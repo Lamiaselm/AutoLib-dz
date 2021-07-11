@@ -1,6 +1,9 @@
 package com.clovertech.autolibdz.ui.subscription
 
 import ViewModel.ViewModelCard
+import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,6 +13,7 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.clovertech.autolibdz.DataClasses.paySubRequest
+import com.clovertech.autolibdz.FindYourCarActivity
 import com.clovertech.autolibdz.R
 import com.clovertech.autolibdz.ViewModel.MainViewModelFactoryCard
 import com.clovertech.autolibdz.repository.PaymentRepository
@@ -36,6 +40,7 @@ class ConfirmSubPayFragment : BottomSheetDialogFragment()  {
         return inflater.inflate(R.layout.fragment_confirm_sub_pay, container, false)
     }
 
+    @SuppressLint("ResourceType")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         close.setOnClickListener {
@@ -71,13 +76,25 @@ if (amount!=null && idSub!=null)
             Log.e("push",response.toString())
             Log.e("push",response.raw().toString())
 
-            Toast.makeText(
-                context,
-                "sucess payment with sub",
-                Toast.LENGTH_SHORT
-            ).show()
+            val builder = AlertDialog.Builder(context)
+
+            builder.setTitle("Success !")
+            builder.setMessage("Votre paiement avec carte d'abonnement est effectué avec success !")
+            builder.setIconAttribute(R.drawable.ic_baseline_warning_24)
+
+            builder.setPositiveButton("Ok"){dialogInterface, which ->
+            }
+            builder.setNeutralButton("Cancel"){dialogInterface , which ->
+            }
+            val alertDialog: AlertDialog = builder.create()
+            alertDialog.setCancelable(false)
+            alertDialog.show()
             requireActivity().solde.setText(response.body()?.balance.toString() + "DA")
             this.dismiss()
+            startActivity(
+                Intent(requireContext(),
+                FindYourCarActivity::class.java)
+            )
         }
         else {
             Log.e("Push", response.body()?.msg.toString())

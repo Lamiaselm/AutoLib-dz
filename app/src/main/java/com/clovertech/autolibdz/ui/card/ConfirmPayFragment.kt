@@ -92,28 +92,26 @@ class ConfirmPayFragment : BottomSheetDialogFragment() {
                     Log.e("push",response.toString())
                     Log.e("push",response.raw().toString())
                     this.dismiss()
-                 /*   val builder = AlertDialog.Builder(activity!!)
-                    //set title for alert dialog
+                val builder = AlertDialog.Builder(activity!!)
                     builder.setTitle(R.string.SucdialogTitle)
-                    //set message for alert dialog
                     builder.setMessage(R.string.SucdialogMessage)
                     builder.setIconAttribute(R.drawable.ic_baseline_done_outline_24)
-
-                    //performing positive action
-                    builder.setPositiveButton("OK"){dialogInterface, which ->
-                        // Toast.makeText(requireActivity(),"clicked yes",Toast.LENGTH_LONG).show()
-*/
-                        startActivity(Intent(requireContext(),
-                            FindYourCarActivity::class.java))
-                    /*}
-
-                    // END ALERT DIALOG
+                    builder.setPositiveButton("Ok"){dialogInterface, which ->
+                    }
+                    builder.setNeutralButton("Cancel"){dialogInterface , which ->
+                    }
                     val alertDialog: AlertDialog = builder.create()
                     alertDialog.setCancelable(false)
-                    alertDialog.show()*/
+                    alertDialog.show()
+
+                        startActivity(Intent(requireContext(),
+                            FindYourCarActivity::class.java))
+                    }
 
 
-                }
+
+
+
                 else {
                     Log.e("Push", response.body().toString())
                     Log.e("Push", response.code().toString())

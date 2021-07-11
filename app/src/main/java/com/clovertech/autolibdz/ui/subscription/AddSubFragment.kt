@@ -16,7 +16,6 @@ import com.clovertech.autolibdz.DataClasses.SubscriptionRequest
 import com.clovertech.autolibdz.R
 import com.clovertech.autolibdz.ViewModel.MainViewModelFactoryCard
 import com.clovertech.autolibdz.repository.PaymentRepository
-import com.clovertech.autolibdz.ui.promo.idTenantHelper
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.fragment_add_sub.*
 class AddSubFragment :  BottomSheetDialogFragment() {
